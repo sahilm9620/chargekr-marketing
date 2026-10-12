@@ -47,7 +47,7 @@ Open `http://localhost:8000`. Native sharing and clipboard availability depend o
 | `index.html` | First screen, puzzle interface, ChargeKr reveal, and links |
 | `style.css` | Responsive layout, colours, typography, and animation |
 | `app.js` | Game flow, interactions, reveal, sound, and sharing |
-| `engine.js` | Two introductory levels and endless puzzle generator |
+| `engine.js` | Introductory level and endless puzzle generator |
 | `chargekr-logo.png` | Original supplied ChargeKr logo |
 | `signal-bold.ttf` | Bundled DejaVu Sans Condensed Bold font |
 | `.nojekyll` | Serves these static files without Jekyll processing |
@@ -57,10 +57,9 @@ Open `http://localhost:8000`. Native sharing and clipboard availability depend o
 ## Experience
 
 - First screen: **Follow the signal.**
-- Level 1: Shaniwar Wada, 3×3 grid.
-- Level 2: Aga Khan Palace, 4×4 grid.
-- Completing level 2 automatically reveals ChargeKr with the supplied logo.
-- **Continue playing** starts level 3 and keeps generating 4×4 and 5×5 puzzles with Pune neighbourhood names. There is no final content level.
+- One introductory puzzle: Shaniwar Wada, 3×3 grid.
+- Completing that puzzle automatically reveals ChargeKr with the supplied logo.
+- **Play another route** starts level 2 and keeps generating 4×4 and 5×5 puzzles with Pune neighbourhood names. There is no final content level.
 - Includes hints, reset, optional sound, reduced-motion support, replay, and spoiler-free sharing.
 
 There is no account system, analytics, leaderboard, or saved progress. Progress resets when the page reloads. Endless puzzles are generated locally; routes can recur over many plays. The game represents an imagined network, not actual charger locations or availability.
@@ -73,7 +72,7 @@ With Node.js installed, run from this folder:
 node tests/game.test.cjs
 ```
 
-Checks cover 1,040 solvable puzzles, high level numbers, required relays, automatic reveal after exactly two levels, endless progression, reset, pause/resume, replay, and sharing from a GitHub Pages-style subpath. UI checks use a minimal DOM; they are not a real browser or device test.
+Checks cover 1,040 solvable puzzles, high level numbers, required relays, automatic reveal after one level, endless progression, reset, pause/resume, replay, and sharing from a GitHub Pages-style subpath. UI checks use a minimal DOM; they are not a real browser or device test.
 
 ## Editing
 

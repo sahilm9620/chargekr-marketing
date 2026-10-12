@@ -3,8 +3,7 @@
 'use strict';
 const N=1,E=2,S=4,W=8,opposite={1:4,2:8,4:1,8:2},delta={1:[-1,0],2:[0,1],4:[1,0],8:[0,-1]};
 const levels=[
-{name:'Shaniwar Wada',district:'01',n:3,path:[[1,0],[1,1],[0,1],[0,2],[1,2]],relays:[[0,1]],blocked:[[2,0],[2,2]],message:'An old gateway. A new connection. One more signal unlocks Pune’s secret.'},
-{name:'Aga Khan Palace',district:'02',n:4,path:[[2,0],[2,1],[1,1],[1,2],[0,2],[0,3],[1,3],[2,3],[3,3]],relays:[[1,2],[2,3]],blocked:[[0,0],[3,0],[3,2]],message:'These were never just signals. They were connections between people.'}
+{name:'Shaniwar Wada',district:'01',n:3,path:[[1,0],[1,1],[0,1],[0,2],[1,2]],relays:[[0,1]],blocked:[[2,0],[2,2]],message:'A new connection is waiting. ChargeKr helps people share power when they need it.'}
 ];
 const places=['Koregaon Park','Shivajinagar','Viman Nagar','Baner','Kothrud','Hinjawadi','Deccan Gymkhana','Aundh','Kalyani Nagar','Hadapsar'];
 function shuffle(values,random){for(let i=values.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[values[i],values[j]]=[values[j],values[i]];}return values;}

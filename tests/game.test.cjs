@@ -2,8 +2,8 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const E=require('../engine.js');
-// Exactly two introductory levels, followed by generated puzzles with no content cap.
-assert.equal(E.levels.length,2);
+// Exactly one introductory level, followed by generated puzzles with no content cap.
+assert.equal(E.levels.length,1);
 function checkSolvable(state){
  assert.equal(E.trace(state).solved,false);assert.equal(new Set(state.route).size,state.route.length);
  assert(state.n<=5);assert.equal(state.start%state.n,0);assert.equal(state.end%state.n,state.n-1);
@@ -28,7 +28,7 @@ const blocked=E.makeLevel(0,()=>0);assert.equal(E.turn(blocked,6),false);
 // Reaching OUT without required relays must not count as a solution.
 const incomplete={n:2,start:0,end:1,relays:[2],route:[0,1],cells:[{base:10,turns:0},{base:10,turns:0},{base:3,turns:0},{base:3,turns:0}]};
 assert.equal(E.trace(incomplete).reason,'missing-relay');
-// Drive real UI handlers: two levels, automatic reveal, endless progression,
+// Drive real UI handlers: one level, automatic reveal, endless progression,
 // reset the same route, cancel an animation by viewing the brand, resume, and replay.
 const html=fs.readFileSync('index.html','utf8');
 const ids=[...html.matchAll(/id="([^"]+)"/g)].map(m=>m[1]);
@@ -45,7 +45,7 @@ vm.runInNewContext(fs.readFileSync('app.js','utf8'),ctx);
 function click(id){assert(!els[id].disabled,id+' is disabled');return els[id].handlers.click();}
 function flush(){let limit=0;while(timers.length){assert(limit++<1000);const t=timers.shift();if(!t.cancel)t.fn();}}
 assert.equal(els.game.hidden,false);assert.equal(els.reveal.hidden,true);assert.equal(els.grid.children.length,9);
-assert.equal(els.about.hidden,true);click('about');click('continue');click('next');assert.equal(els.reveal.hidden,true);assert.equal(actualStates.length,1);
+assert.equal(els.about.hidden,true);
 click('hint');assert(els.grid.children.some(b=>b.classList.contains('hinted')));
 click('send');flush();assert.equal(els.completion.hidden,true);assert.equal(els.send.disabled,false);
 click('reset');assert.equal(els.grid.children.length,9);
@@ -54,12 +54,11 @@ function solveCurrent(){
  while(E.hint(s)!==null){assert(safety++<100);const index=E.hint(s);els.grid.children[index].handlers.click();}
  assert.equal(E.trace(s).solved,true);click('send');flush();
 }
-solveCurrent();assert.equal(els.reveal.hidden,true);assert.equal(els.completion.hidden,false);click('next');assert.equal(actualStates.at(-1).number,1);
-solveCurrent();assert.equal(els.game.hidden,true);assert.equal(els.reveal.hidden,false);assert.equal(els['result-label'].textContent,'PUNE / SECRET MODE UNLOCKED');assert.equal(actualStates.length,2);
-click('continue');assert.equal(actualStates.at(-1).number,2);assert.equal(els.reveal.hidden,true);assert.equal(els['endless-badge'].hidden,false);assert.equal(els['district-progress'].hidden,true);assert.equal(els.about.hidden,false);
-for(let i=2;i<8;i++){assert.equal(actualStates.at(-1).number,i);solveCurrent();assert.equal(els.reveal.hidden,true);click('next');}
+solveCurrent();assert.equal(els.game.hidden,true);assert.equal(els.reveal.hidden,false);assert.equal(els['result-label'].textContent,'PUNE / SECRET MODE UNLOCKED');assert.equal(actualStates.length,1);
+click('continue');assert.equal(actualStates.at(-1).number,1);assert.equal(els.reveal.hidden,true);assert.equal(els['endless-badge'].hidden,false);assert.equal(els.about.hidden,false);
+for(let i=1;i<7;i++){assert.equal(actualStates.at(-1).number,i);solveCurrent();assert.equal(els.reveal.hidden,true);click('next');}
 const retained=actualStates.at(-1),initial=retained.initialTurns.slice(),route=retained.route.slice();els.grid.children[retained.start].handlers.click();click('reset');assert.strictEqual(actualStates.at(-1),retained);assert.deepEqual(retained.cells.map(c=>c.turns),initial);assert.deepEqual(retained.route,route);
 els.grid.children[retained.start].handlers.click();const turns=retained.cells.map(c=>c.turns);click('send');click('about');flush();assert.equal(els.reveal.hidden,false);assert.equal(els.game.hidden,true);click('continue');assert.strictEqual(actualStates.at(-1),retained);assert.deepEqual(retained.cells.map(c=>c.turns),turns);assert.equal(els.send.disabled,false);assert.equal(els.game.hidden,false);
-solveCurrent();click('about');click('continue');assert.equal(actualStates.at(-1).number,9);
+solveCurrent();click('about');click('continue');assert.equal(actualStates.at(-1).number,8);
 click('about');
-Promise.resolve(click('share')).then(()=>{assert.equal(els['share-fallback'].hidden,false);assert.equal(els['share-url'].value,'https://example.github.io/pune-secret-mode/');click('replay');assert.equal(els.game.hidden,false);assert.equal(els.moves.textContent,'00');assert.equal(els.grid.children.length,9);assert.equal(els.about.hidden,true);click('about');assert.equal(els.reveal.hidden,true);console.log('PASS: 1,040 solvable puzzles including level 1,000,000; route variety; required relays; automatic reveal after exactly 2 levels; endless progression; logo; failure, hints, same-route reset, pause/resume, replay, spoiler-free sharing fallback.');});
+Promise.resolve(click('share')).then(()=>{assert.equal(els['share-fallback'].hidden,false);assert.equal(els['share-url'].value,'https://example.github.io/pune-secret-mode/');click('replay');assert.equal(els.game.hidden,false);assert.equal(els.moves.textContent,'00');assert.equal(els.grid.children.length,9);assert.equal(els.about.hidden,true);click('about');assert.equal(els.reveal.hidden,true);console.log('PASS: 1,040 solvable puzzles; route variety; required relays; automatic reveal after one level; endless progression; logo; failure, hints, same-route reset, pause/resume, replay, spoiler-free sharing fallback.');});
